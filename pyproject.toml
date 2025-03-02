@@ -11,10 +11,18 @@ httpx = "^0.28.1"
 beautifulsoup4 = "^4.13.3"
 lxml = "^5.3.1"
 pypdf = "^5.3.0"
+pydantic = "^2.10.6"
+pydantic-settings = "^2.8.1"
+sqlmodel = "^0.0.23"
+alembic = "^1.14.1"
+aiosqlite = "^0.21.0"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
 pynvim = "^0.5.2"
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.3"
 
 [build-system]
 requires = ["poetry-core"]
