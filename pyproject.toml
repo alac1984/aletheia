@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "does"
+version = "0.1.0"
+description = ""
+authors = ["André Carvalho <alac1984@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+httpx = "^0.28.1"
+beautifulsoup4 = "^4.13.3"
+lxml = "^5.3.1"
+pypdf = "^5.3.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pynvim = "^0.5.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
