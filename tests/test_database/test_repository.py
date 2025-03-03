@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 from sqlmodel import select
-from database.scrapping import insert_doe
+from database.repository import insert_doe
 from database.models.models import DOE
 from models.models import DOECreate
 
