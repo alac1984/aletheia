@@ -1,17 +1,19 @@
-import pytest_asyncio
+import pytest
 from datetime import date
 from sqlmodel import select
 from database.scrapping import insert_doe
+from database.models.models import DOE
 from models.models import DOECreate
 
 
-@pytest_asyncio.fixture()
+@pytest.mark.asyncio
 async def test_insert_doe(session):
     filename = "do20250103p02.pdf"
-    doe = DOECreate(filename)
-    insert_doe(session, doe)
+    doe = DOECreate(filename=filename)
+    await insert_doe(session, doe)
 
-    result = await session.execute(select(DOE))
+    results = await session.exec(select(DOE))
+    result = results.one()
 
     assert result is not None
     assert result.filename == "do20250103p02.pdf"

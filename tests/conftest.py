@@ -1,14 +1,20 @@
+import os
 import pytest
 import pytest_asyncio
+from dotenv import load_dotenv
 from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+load_dotenv()
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 @pytest_asyncio.fixture
 async def session():
     test_engine = create_async_engine(
-        "sqlite+aiosqlite:///:memory:",
+        DATABASE_URL.replace("dese", "tests"),
         echo=False,
         future=True
     )
