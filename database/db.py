@@ -25,5 +25,5 @@ async def get_session() -> AsyncSession:  # type: ignore
         yield session
 
 def get_sync_engine():
-    sync_url = DATABASE_URL.replace("+aiosqlite", "")
+    sync_url = DATABASE_URL.replace("+asyncpg", "+psycopg2")
     return create_engine(sync_url, echo=True, future=True)

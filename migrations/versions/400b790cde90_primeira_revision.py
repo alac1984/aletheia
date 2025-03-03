@@ -1,8 +1,8 @@
-"""Primeira revisão
+"""Primeira revision
 
-Revision ID: 6c3b872e2314
+Revision ID: 400b790cde90
 Revises: 
-Create Date: 2025-03-02 04:22:25.828582
+Create Date: 2025-03-03 11:15:58.219586
 
 """
 from typing import Sequence, Union
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '6c3b872e2314'
+revision: str = '400b790cde90'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -36,6 +36,13 @@ def upgrade() -> None:
     sa.Column('descricao', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('doe',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('filename', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('data_publicacao', sa.Date(), nullable=False),
+    sa.Column('caderno', sa.Integer(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('motivo',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('descricao', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -50,34 +57,36 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('inep', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('nome', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('cidade_id', sqlmodel.sql.sqltypes.AutoString(), nullable=True),
+    sa.Column('cidade_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['cidade_id'], ['cidade.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('regional',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('cidade', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.ForeignKeyConstraint(['cidade'], ['cidade.id'], ),
+    sa.Column('cidade_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['cidade_id'], ['cidade.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('extrato',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('regional_id', sa.Integer(), nullable=False),
+    sa.Column('doe_id', sa.Integer(), nullable=False),
     sa.Column('processo', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('data_publicacao', sa.Date(), nullable=False),
+    sa.ForeignKeyConstraint(['doe_id'], ['doe.id'], ),
     sa.ForeignKeyConstraint(['regional_id'], ['regional.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('contrato',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('lote', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('extrato_id', sa.Integer(), nullable=False),
     sa.Column('escola_id', sa.Integer(), nullable=False),
     sa.Column('turno', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('matricula', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('professor', sa.Integer(), nullable=False),
+    sa.Column('professor_id', sa.Integer(), nullable=False),
     sa.Column('cargo', sa.Integer(), nullable=False),
-    sa.Column('substituido', sa.Integer(), nullable=False),
+    sa.Column('substituido_id', sa.Integer(), nullable=False),
     sa.Column('justificativa', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('inicio', sa.Date(), nullable=False),
     sa.Column('fim', sa.Date(), nullable=False),
@@ -92,8 +101,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['escola_id'], ['escola.id'], ),
     sa.ForeignKeyConstraint(['extrato_id'], ['extrato.id'], ),
     sa.ForeignKeyConstraint(['motivo'], ['motivo.id'], ),
-    sa.ForeignKeyConstraint(['professor'], ['professor.id'], ),
-    sa.ForeignKeyConstraint(['substituido'], ['professor.id'], ),
+    sa.ForeignKeyConstraint(['professor_id'], ['professor.id'], ),
+    sa.ForeignKeyConstraint(['substituido_id'], ['professor.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -107,6 +116,7 @@ def downgrade() -> None:
     op.drop_table('escola')
     op.drop_table('professor')
     op.drop_table('motivo')
+    op.drop_table('doe')
     op.drop_table('criterio')
     op.drop_table('cidade')
     op.drop_table('cargo')

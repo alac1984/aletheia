@@ -2,13 +2,24 @@ from typing import Optional
 from datetime import date
 from sqlmodel import SQLModel, Field, Relationship
 
+
+class DOE(SQLModel, table=True):
+    """
+        Representa um DOE encontrado no sistema.
+    """
+    id: Optional[int] = Field(default=None, primary_key=True)
+    filename: str
+    data_publicacao: date
+    caderno: int
+
+
 class Regional(SQLModel, table=True):
     """
         Representa a regional (CREDE ou SEFOR)
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     nome: str
-    cidade: str = Field(foreign_key="cidade.id")
+    cidade_id: int = Field(foreign_key="cidade.id")
 
 
 class Extrato(SQLModel, table=True):
@@ -19,8 +30,8 @@ class Extrato(SQLModel, table=True):
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     regional_id: int = Field(foreign_key="regional.id")
+    doe_id: int = Field(foreign_key="doe.id")
     processo: str
-    data_publicacao: date
 
 
 class Contrato(SQLModel, table=True):
@@ -29,13 +40,14 @@ class Contrato(SQLModel, table=True):
         como exposto no DOE em algum Extract.
     """
     id: Optional[int] = Field(default=None, primary_key=True)
+    lote: str
     extrato_id: int = Field(foreign_key="extrato.id")
     escola_id: int = Field(foreign_key="escola.id")
     turno: str
     matricula: str
-    professor: int = Field(foreign_key="professor.id")
+    professor_id: int = Field(foreign_key="professor.id")
     cargo: int = Field(foreign_key="cargo.id")
-    substituido: int = Field(foreign_key="professor.id")
+    substituido_id: int = Field(foreign_key="professor.id")
     justificativa: str
     inicio: date
     fim: date
@@ -57,7 +69,7 @@ class Motivo(SQLModel, table=True):
 
 class Criterio(SQLModel, table=True):
     """
-        Representa os critóerios distintos encontrados.
+        Representa os critérios distintos encontrados.
     """
     id: Optional[int] = Field(default=None, primary_key=True)
     descricao: str
@@ -87,7 +99,7 @@ class Escola(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     inep: str
     nome: str
-    cidade_id: Optional[str] = Field(foreign_key="cidade.id")
+    cidade_id: Optional[int] = Field(foreign_key="cidade.id")
 
 
 class Cidade(SQLModel, table=True):
